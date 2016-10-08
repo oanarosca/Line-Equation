@@ -1,9 +1,9 @@
 .STACK 100H
 .DATA
-	A DB 0  
-	B DB 0
-	C DB 0         
-	X DW 0 
+	A DW 1  
+	B DW 1
+	C DW 0         
+	X DW 0
 	Y DW 0
 	AUX DW 0
 	COUNT DW 19
@@ -15,26 +15,29 @@
 	MOV AX, @DATA
 	MOV DS, AX
 	
-	LEA DX, MSGA
-	MOV AH, 9
-	INT 21H
-	MOV AH, 1 ;input
-	INT 21H
-	MOV A, AL
+	;LEA DX, MSGA
+	;MOV AH, 9
+	;INT 21H
+	;MOV AH, 1 ;input
+	;INT 21H  
+	;SUB AX, '0'
+	;MOV A, AX
            
-  LEA DX, MSGB
-	MOV AH, 9
-	INT 21H
-	MOV AH, 1 ;input
-	INT 21H
-	MOV B, AL
+  ;LEA DX, MSGB
+	;MOV AH, 9
+	;INT 21H
+	;MOV AH, 1 ;input
+	;INT 21H  
+	;SUB AX, '0'
+	;MOV B, AX
 	
-	LEA DX, MSGC
-	MOV AH, 9
-	INT 21H
-	MOV AH, 1 ;input
-	INT 21H
-	MOV C, AL       
+	;LEA DX, MSGC
+	;MOV AH, 9
+	;INT 21H
+	;MOV AH, 1 ;input
+	;INT 21H
+	;SUB AX, '0'
+	;MOV C, AX       
 	         
 	MOV AH, 00h ; set video mode
 	MOV AL, 12h ; graphics 640x480
@@ -92,11 +95,12 @@
 		
 	MOV AX, 0C04H     
 	MOV CX, 39
-	NEG BX
 	    
 	DRAWLINE:
 		MOV AUX, CX
+		NEG BX
 		CALL FINDY
+		NEG BX
 		CALL FINDX
 		MOV DX, Y
 		MOV CX, X
@@ -139,7 +143,17 @@
 	FINDY ENDP
 	
 	FINDX PROC
-		MOV X, 100
+		MOV AX, COUNT
+		MOV BX, B
+		MUL BX
+		ADD AX, C
+		MOV BX, A
+		DIV BX   
+		NEG AX
+		MOV BX, 12
+		MUL BX
+		ADD AX, 320
+		MOV X, AX
 		RET
 	FINDX ENDP
 END
