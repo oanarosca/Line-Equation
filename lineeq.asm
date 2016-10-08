@@ -1,12 +1,12 @@
 .STACK 100H
 .DATA
-	A DW 1  
+	A DW 0  
 	B DW 1
-	C DW 0         
+	C DW 1         
 	X DW 0
 	Y DW 0
 	AUX DW 0
-	COUNT DW 19
+	COUNT DW 0
 	MSGA DB "ENTER A: $"
 	MSGB DB 0AH, 0DH, "ENTER B: $"
 	MSGC DB 0AH, 0DH, "ENTER C: $"
@@ -14,7 +14,7 @@
 .CODE       
 	MOV AX, @DATA
 	MOV DS, AX
-	
+	          	          
 	;LEA DX, MSGA
 	;MOV AH, 9
 	;INT 21H
@@ -22,7 +22,9 @@
 	;INT 21H  
 	;SUB AX, '0'
 	;MOV A, AX
-           
+             
+  CALL DEFINECOUNT
+             
   ;LEA DX, MSGB
 	;MOV AH, 9
 	;INT 21H
@@ -81,7 +83,8 @@
 		JL OXUNIT  
 		
 	MOV AX, 0C04H     
-	MOV CX, 39
+	;MOV CX, 39
+	MOV CX, AUX
 	    
 	DRAWLINE:
 		MOV AUX, CX
@@ -103,6 +106,18 @@
 	MOV AX, 4C00H ; Exit to DOS function
 	INT 21H   
 	
+	DEFINECOUNT PROC
+		CMP A, 0
+		JE ZERO
+		MOV COUNT, 19
+		MOV AUX, 39
+		RET          
+		ZERO:
+			MOV COUNT, 26
+			MOV AUX, 53
+			RET
+	DEFINECOUNT ENDP
+	
 	OYDRAW PROC         	
 		MOV AX, 0C35H
 		MOV CX, 319
@@ -121,15 +136,31 @@
 		RET
 	OXDRAW ENDP 
 	
-	FINDY PROC
+	FINDY PROC  
+		CMP A, 0
+		JE YZERO
 		MOV AX, COUNT
-		MUL BX
+		MUL BX 
+		ADD AX, 240
 		MOV Y, AX
-		ADD Y, 240
 		RET
+		YZERO:
+			MOV AX, C
+			MOV BX, B
+			XOR DX, DX
+			DIV BX
+			MOV BX, 12
+			MUL BX
+			NEG AX
+			MOV Y, AX
+			ADD Y, 240
+			RET
 	FINDY ENDP
 	
-	FINDX PROC
+	FINDX PROC 
+		MOV AX, COUNT
+		CMP A, 0
+		JE XZERO
 		MOV AX, COUNT
 		MOV BX, B
 		MUL BX
@@ -138,9 +169,15 @@
 		DIV BX
 		MOV BX, 12
 		MUL BX 
-		NEG AX
+		NEG AX 
 		ADD AX, 320
 		MOV X, AX
 		RET
+		XZERO:
+			MOV BX, 12
+			MUL BX
+			ADD AX, 320
+			MOV X, AX
+			RET
 	FINDX ENDP
 END
