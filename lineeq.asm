@@ -4,7 +4,7 @@
 	B DB 0
 	C DB 0    
 	AUX DW 0
-	MULT DW 19
+	COUNT DW 19
 	MSGA DB "ENTER A: $"
 	MSGB DB 0AH, 0DH, "ENTER B: $"
 	MSGC DB 0AH, 0DH, "ENTER C: $"
@@ -93,17 +93,16 @@
 	NEG BX
 	
 	FINDX:
-		MOV AX, MULT
+		MOV AX, COUNT
 		MUL BX
 		MOV DX, AX
-		mov aux, dx
 		ADD DX, 240
 		MOV AUX, CX
 		MOV CX, 100 
 		MOV AX, 0C04H
 		INT 10H  
 		MOV CX, AUX
-		DEC MULT
+		DEC COUNT
 		LOOP FINDX
 	          
 	MOV AH, 07h ; wait for key press to exit program
