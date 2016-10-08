@@ -2,7 +2,7 @@
 .DATA
 	A DW 0  
 	B DW 1
-	C DW 1         
+	C DW 0         
 	X DW 0
 	Y DW 0
 	AUX DW 0
@@ -151,9 +151,9 @@
 			DIV BX
 			MOV BX, 12
 			MUL BX
-			NEG AX
+			;NEG AX
+			ADD AX, 240
 			MOV Y, AX
-			ADD Y, 240
 			RET
 	FINDY ENDP
 	
