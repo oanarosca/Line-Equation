@@ -2,7 +2,9 @@
 .DATA
 	A DB 0  
 	B DB 0
-	C DB 0    
+	C DB 0         
+	X DW 0 
+	Y DW 0
 	AUX DW 0
 	COUNT DW 19
 	MSGA DB "ENTER A: $"
@@ -91,19 +93,18 @@
 	MOV AX, 0C04H     
 	MOV CX, 39
 	NEG BX
-	
-	FINDX:
-		MOV AX, COUNT
-		MUL BX
-		MOV DX, AX
-		ADD DX, 240
+	    
+	DRAWLINE:
 		MOV AUX, CX
-		MOV CX, 100 
+		CALL FINDY
+		CALL FINDX
+		MOV DX, Y
+		MOV CX, X
 		MOV AX, 0C04H
 		INT 10H  
 		MOV CX, AUX
 		DEC COUNT
-		LOOP FINDX
+		LOOP DRAWLINE
 	          
 	MOV AH, 07h ; wait for key press to exit program
 	INT 21h
@@ -127,5 +128,18 @@
 		MOV DX, 241
 		INT 10H
 		RET
-	OXDRAW ENDP
+	OXDRAW ENDP 
+	
+	FINDY PROC
+		MOV AX, COUNT
+		MUL BX
+		MOV Y, AX
+		ADD Y, 240
+		RET
+	FINDY ENDP
+	
+	FINDX PROC
+		MOV X, 100
+		RET
+	FINDX ENDP
 END
