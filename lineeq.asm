@@ -54,18 +54,11 @@
 		INC DX 
 		CMP DX, 480
 		JL OY            
+     
+  MOV DX, 0   
              
   OYUNIT:  
-  	FORWARDY:
-  		MOV DX, AUX
-  		INC DX
-  	MOV AUX, DX
-  	MOV AX, AUX ; impartit
-  	XOR DX, DX
-  	DIV BX
-  	CMP DX, 0
-  	JG 	FORWARDY
-  	MOV DX, AUX
+  	ADD DX, 12
   	CALL OYDRAW  
   	CMP DX, 480
   	JL OYUNIT          
@@ -79,16 +72,10 @@
 		CMP CX, 640
 		JL OX  
 		    
-	MOV CX, 0	    
+	MOV CX, -4	    
 		    
 	OXUNIT:
-		FORWARDX:
-			INC CX
-		MOV AX, CX
-		XOR DX, DX   
-		DIV BX
-		CMP DX, 8
-		JNE FORWARDX
+		ADD CX, 12
 		CALL OXDRAW
 		CMP CX, 640
 		JL OXUNIT  
@@ -146,12 +133,12 @@
 		MOV AX, COUNT
 		MOV BX, B
 		MUL BX
-		ADD AX, C
+		ADD AX, C  
 		MOV BX, A
-		DIV BX   
-		NEG AX
+		DIV BX
 		MOV BX, 12
-		MUL BX
+		MUL BX 
+		NEG AX
 		ADD AX, 320
 		MOV X, AX
 		RET
