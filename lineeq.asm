@@ -1,8 +1,8 @@
 .STACK 100H
 .DATA
-	A DW 0  
+	A DW 1  
 	B DW 1
-	C DW 0         
+	C DW 1         
 	X DW 0
 	Y DW 0
 	AUX DW 0
@@ -60,8 +60,8 @@
   MOV DX, 0   
              
   OYUNIT:  
+  	CALL OYDRAW
   	ADD DX, 12
-  	CALL OYDRAW  
   	CMP DX, 480
   	JL OYUNIT          
                          
@@ -74,16 +74,15 @@
 		CMP CX, 640
 		JL OX  
 		    
-	MOV CX, -4	    
-		    
+	MOV CX, 8	    
+	
 	OXUNIT:
-		ADD CX, 12
 		CALL OXDRAW
+		ADD CX, 12
 		CMP CX, 640
-		JL OXUNIT  
+		JL OXUNIT
 		
 	MOV AX, 0C04H     
-	;MOV CX, 39
 	MOV CX, AUX
 	    
 	DRAWLINE:
@@ -151,7 +150,6 @@
 			DIV BX
 			MOV BX, 12
 			MUL BX
-			;NEG AX
 			ADD AX, 240
 			MOV Y, AX
 			RET
