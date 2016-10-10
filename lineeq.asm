@@ -1,7 +1,7 @@
 .STACK 100H
 .DATA
 	A DW 1  
-	B DW 1
+	B DW 2
 	C DW 1         
 	X DW 0
 	Y DW 0
