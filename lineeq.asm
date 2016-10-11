@@ -1,8 +1,8 @@
 .STACK 100H
 .DATA
-	A DW 1  
-	B DW 2
-	C DW 1         
+	A DW 0  
+	B DW 0
+	C DW 0         
 	X DW 0
 	Y DW 0
 	AUX DW 0
@@ -15,31 +15,34 @@
 	MOV AX, @DATA
 	MOV DS, AX
 	          	          
-	;LEA DX, MSGA
-	;MOV AH, 9
-	;INT 21H
-	;MOV AH, 1 ;input
-	;INT 21H  
-	;SUB AX, '0'
-	;MOV A, AX
+	LEA DX, MSGA
+	MOV AH, 9
+	INT 21H
+	MOV AH, 1 ;input
+	INT 21H  
+	SUB AL, '0'
+	CBW
+	MOV A, AX
              
   CALL DEFINECOUNT
              
-  ;LEA DX, MSGB
-	;MOV AH, 9
-	;INT 21H
-	;MOV AH, 1 ;input
-	;INT 21H  
-	;SUB AX, '0'
-	;MOV B, AX
+  LEA DX, MSGB
+	MOV AH, 9
+	INT 21H
+	MOV AH, 1 ;input
+	INT 21H  
+	SUB AL, '0'
+	CBW
+	MOV B, AX
 	
-	;LEA DX, MSGC
-	;MOV AH, 9
-	;INT 21H
-	;MOV AH, 1 ;input
-	;INT 21H
-	;SUB AX, '0'
-	;MOV C, AX       
+	LEA DX, MSGC
+	MOV AH, 9
+	INT 21H
+	MOV AH, 1 ;input
+	INT 21H
+	SUB AL, '0'
+	CBW
+	MOV C, AX       
 	         
 	MOV AH, 00h ; set video mode
 	MOV AL, 12h ; graphics 640x480
