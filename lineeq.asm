@@ -154,11 +154,12 @@
 		RET
 		YZERO:
 			MOV AX, C
-			MOV BX, B
-			XOR DX, DX
-			DIV BX
 			MOV BX, 12
 			MUL BX
+			MOV BX, B
+			XOR DX, DX
+			DIV BX   
+			MOV BX, 12
 			ADD AX, 240
 			MOV Y, AX
 			RET
@@ -172,11 +173,12 @@
 		MOV BX, B
 		MUL BX
 		ADD AX, C  
-		MOV BX, A 
-		XOR DX, DX
-		DIV BX
 		MOV BX, 12
-		MUL BX 
+		MUL BX
+		XOR DX, DX
+		MOV BX, A
+		DIV BX 
+		MOV BX, 12
 		NEG AX 
 		ADD AX, 320
 		MOV X, AX
