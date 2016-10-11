@@ -106,7 +106,9 @@
 	  
 	DRAW PROC
 		CMP X, 0
-		JL EXIT
+		JL EXIT    
+		CMP X, 640
+		JG EXIT
 		MOV AX, 0C04H
 		INT 10H
 		RET
