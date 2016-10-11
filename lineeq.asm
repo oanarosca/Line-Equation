@@ -172,7 +172,8 @@
 		MOV BX, B
 		MUL BX
 		ADD AX, C  
-		MOV BX, A
+		MOV BX, A 
+		XOR DX, DX
 		DIV BX
 		MOV BX, 12
 		MUL BX 
