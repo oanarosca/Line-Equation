@@ -93,8 +93,7 @@
 		CALL FINDX
 		MOV DX, Y
 		MOV CX, X
-		MOV AX, 0C04H
-		INT 10H  
+		CALL DRAW
 		MOV CX, AUX
 		DEC COUNT
 		LOOP DRAWLINE
@@ -103,8 +102,18 @@
 	INT 21h
 	
 	MOV AX, 4C00H ; Exit to DOS function
-	INT 21H   
-	
+	INT 21H  
+	  
+	DRAW PROC
+		CMP X, 0
+		JL EXIT
+		MOV AX, 0C04H
+		INT 10H
+		RET
+		EXIT:
+			RET
+	DRAW ENDP  
+	  	
 	DEFINECOUNT PROC
 		CMP A, 0
 		JE ZERO
