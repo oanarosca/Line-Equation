@@ -18,10 +18,10 @@
 	LEA DX, MSGA
 	MOV AH, 9
 	INT 21H
-	MOV AH, 1 ;input
+	MOV AH, 1 ; input
 	INT 21H  
 	SUB AL, '0'
-	CBW
+	CBW ;convert byte to word
 	MOV A, AX
              
   CALL DEFINECOUNT
@@ -29,7 +29,7 @@
   LEA DX, MSGB
 	MOV AH, 9
 	INT 21H
-	MOV AH, 1 ;input
+	MOV AH, 1
 	INT 21H  
 	SUB AL, '0'
 	CBW
@@ -38,7 +38,7 @@
 	LEA DX, MSGC
 	MOV AH, 9
 	INT 21H
-	MOV AH, 1 ;input
+	MOV AH, 1
 	INT 21H
 	SUB AL, '0'
 	CBW
@@ -54,7 +54,7 @@
 	
 	MOV BX, 12 ; impartitor
 
-	OY:
+	OY: ; draw OY axis
 		INT 10h ; draw pixel
 		INC DX 
 		CMP DX, 480
@@ -62,7 +62,7 @@
      
   MOV DX, 0   
              
-  OYUNIT:  
+  OYUNIT: ; draw units on the OY axis 
   	CALL OYDRAW
   	ADD DX, 12
   	CMP DX, 480
@@ -71,7 +71,7 @@
   MOV CX, 0
   MOV DX, 240     
        
-	OX:
+	OX: ; draw OX axis
 		INT 10h
 		INC CX
 		CMP CX, 640
@@ -79,7 +79,7 @@
 		    
 	MOV CX, 8	    
 	
-	OXUNIT:
+	OXUNIT: ; draw units on the OX axis
 		CALL OXDRAW
 		ADD CX, 12
 		CMP CX, 640
@@ -87,6 +87,10 @@
 		
 	MOV AX, 0C04H     
 	MOV CX, AUX
+	
+	; formulas (one unit consists of 12px):
+	; on the y-axis: 240-12*y
+	; on the x-axis: 320+12*x
 	    
 	DRAWLINE:
 		MOV AUX, CX
@@ -104,13 +108,13 @@
 	MOV AH, 07h ; wait for key press to exit program
 	INT 21h
 	
-	MOV AX, 4C00H ; Exit to DOS function
+	MOV AX, 4C00H ; exit to DOS function
 	INT 21H   
 	
 	EXIT:
 		RET
 	  
-	DRAW PROC
+	DRAW PROC ; checks whether the x coordinate is within [0, 640], and then draws the point if not out of range
 		CMP X, 0
 		JL EXIT    
 		CMP X, 640
@@ -120,7 +124,7 @@
 		RET
 	DRAW ENDP  
 	  	
-	DEFINECOUNT PROC
+	DEFINECOUNT PROC ; defines the count and aux variables depending on the value of A
 		CMP A, 0
 		JE ZERO
 		MOV COUNT, 19
@@ -132,7 +136,7 @@
 			RET
 	DEFINECOUNT ENDP
 	
-	OYDRAW PROC         	
+	OYDRAW PROC ; draws OY units        	
 		MOV AX, 0C35H
 		MOV CX, 319
 		INT 10H
@@ -141,7 +145,7 @@
 		RET           
   OYDRAW ENDP
 	  
-	OXDRAW PROC
+	OXDRAW PROC ; draws OX units
 		MOV AX, 0C35H
 		MOV DX, 239
 		INT 10H
@@ -158,7 +162,7 @@
 		ADD AX, 240
 		MOV Y, AX
 		RET
-		YZERO:
+		YZERO: ; in case A=0, y is uniquely determined
 			MOV AX, C
 			MOV BX, 12
 			MUL BX
@@ -170,7 +174,9 @@
 			MOV Y, AX
 			RET
 	FINDY ENDP
-	
+	         
+	; the formula for x: (-c-b*y)/a 
+	 
 	FINDX PROC 
 		MOV AX, COUNT
 		CMP A, 0
@@ -198,14 +204,14 @@
 			RET 
 	FINDX ENDP  
 	
-	MINUS PROC
+	MINUS PROC ; NEGs the BX register
 		CMP COUNT, -1
 		JG ELSE
 		CMP BX, 12
 		JE ELSE
 		NEG AX
 		RET
-		ELSE:  ; count > 0 or bx != 12
+		ELSE:  ; if count > 0 or bx != 12
 			CMP COUNT, 0
 			JL EXIT
 			CMP BX, 12
