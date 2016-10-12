@@ -105,7 +105,10 @@
 	INT 21h
 	
 	MOV AX, 4C00H ; Exit to DOS function
-	INT 21H  
+	INT 21H   
+	
+	EXIT:
+		RET
 	  
 	DRAW PROC
 		CMP X, 0
@@ -115,8 +118,6 @@
 		MOV AX, 0C04H
 		INT 10H
 		RET
-		EXIT:
-			RET
 	DRAW ENDP  
 	  	
 	DEFINECOUNT PROC
@@ -177,14 +178,15 @@
 		MOV AX, COUNT
 		MOV BX, B
 		MUL BX
-		ADD AX, C  
-		MOV BX, 12
+		ADD AX, C 
+		CALL MINUS
+		MOV BX, 12 
 		MUL BX
 		XOR DX, DX
 		MOV BX, A
 		DIV BX 
-		MOV BX, 12
-		NEG AX 
+		MOV BX, 12 
+		CALL MINUS
 		ADD AX, 320
 		MOV X, AX
 		RET
@@ -193,6 +195,22 @@
 			MUL BX
 			ADD AX, 320
 			MOV X, AX
-			RET
-	FINDX ENDP
+			RET 
+	FINDX ENDP  
+	
+	MINUS PROC
+		CMP COUNT, -1
+		JG ELSE
+		CMP BX, 12
+		JE ELSE
+		NEG AX
+		RET
+		ELSE:  ; count > 0 or bx != 12
+			CMP COUNT, 0
+			JL EXIT
+			CMP BX, 12
+			JNE EXIT
+			NEG AX
+			JMP EXIT
+	MINUS ENDP
 END
