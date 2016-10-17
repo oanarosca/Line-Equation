@@ -64,7 +64,7 @@
              
   OYUNIT: ; draw units on the OY axis 
   	CALL OYDRAW
-  	ADD DX, 12
+  	ADD DX, 10
   	CMP DX, 480
   	JL OYUNIT          
                          
@@ -76,19 +76,19 @@
 		INC CX
 		CMP CX, 640
 		JL OX  
-		    
-	MOV CX, 8	    
-	
+	      
+	MOV CX, 0      
+	      
 	OXUNIT: ; draw units on the OX axis
 		CALL OXDRAW
-		ADD CX, 12
+		ADD CX, 10
 		CMP CX, 640
 		JL OXUNIT
 		
 	MOV AX, 0C04H     
 	MOV CX, AUX
 	
-	; formulas (one unit consists of 12px):
+	; formulas (one unit consists of 12px) v1.0:
 	; on the y-axis: 240-12*y
 	; on the x-axis: 320+12*x
 	    
@@ -114,7 +114,7 @@
 	EXIT:
 		RET
 	  
-	DRAW PROC ; checks whether the x coordinate is within [0, 640], and then draws the point if not out of range
+	DRAW PROC ; checks whether the x coordinate is within [0, 640] or not, and then draws the point if not out of range
 		CMP X, 0
 		JL EXIT    
 		CMP X, 640
@@ -127,12 +127,12 @@
 	DEFINECOUNT PROC ; defines the count and aux variables depending on the value of A
 		CMP A, 0
 		JE ZERO
-		MOV COUNT, 19
-		MOV AUX, 39
+		MOV COUNT, 240
+		MOV AUX, 481
 		RET          
 		ZERO:
-			MOV COUNT, 26
-			MOV AUX, 53
+			MOV COUNT, 320
+			MOV AUX, 641
 			RET
 	DEFINECOUNT ENDP
 	
@@ -158,14 +158,12 @@
 		CMP A, 0
 		JE YZERO
 		MOV AX, COUNT
-		MUL BX 
+		NEG AX
 		ADD AX, 240
 		MOV Y, AX
 		RET
 		YZERO: ; in case A=0, y is uniquely determined
 			MOV AX, C
-			MOV BX, 12
-			MUL BX
 			MOV BX, B
 			XOR DX, DX
 			DIV BX   
@@ -186,8 +184,6 @@
 		MUL BX
 		ADD AX, C 
 		CALL MINUS
-		MOV BX, 12 
-		MUL BX
 		XOR DX, DX
 		MOV BX, A
 		DIV BX 
@@ -197,8 +193,6 @@
 		MOV X, AX
 		RET
 		XZERO:
-			MOV BX, 12
-			MUL BX
 			ADD AX, 320
 			MOV X, AX
 			RET 
